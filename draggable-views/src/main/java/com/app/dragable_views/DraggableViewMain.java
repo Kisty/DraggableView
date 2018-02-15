@@ -1,6 +1,5 @@
 package com.app.dragable_views;
 
-import android.content.Context;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,18 +15,12 @@ import java.util.ArrayList;
 public class DraggableViewMain implements View.OnTouchListener, View.OnDragListener {
 
     private ViewGroup destiViewGroup;
-    private Context context;
     private ArrayList<View> viewsArrayList = new ArrayList<>();
-    public OnViewSelection viewSelection;
+    public OnViewSelectionListener viewSelection;
 
-    public DraggableViewMain() {
-
-    }
-
-    public DraggableViewMain(Context context, ViewGroup destiViewGroup) {
-        this.context = context;
+    public DraggableViewMain(OnViewSelectionListener onViewSelectionListener, ViewGroup destiViewGroup) {
         this.destiViewGroup = destiViewGroup;
-        this.viewSelection = (OnViewSelection) context;
+        this.viewSelection = onViewSelectionListener;
 
         destiViewGroup.setOnDragListener(this);
 

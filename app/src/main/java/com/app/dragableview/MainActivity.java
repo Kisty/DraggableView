@@ -7,9 +7,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.app.dragable_views.DraggableViewMain;
-import com.app.dragable_views.OnViewSelection;
+import com.app.dragable_views.OnViewSelectionListener;
 
-public class MainActivity extends AppCompatActivity implements OnViewSelection {
+public class MainActivity extends AppCompatActivity implements OnViewSelectionListener {
 
     private ImageView imgSourceOne, imgSourceTwo, imgSourceThree;
     private RelativeLayout rlDestination;
