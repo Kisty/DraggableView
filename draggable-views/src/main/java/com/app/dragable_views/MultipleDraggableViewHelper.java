@@ -20,9 +20,9 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
 
     public static final String TAG = MultipleDraggableViewHelper.class.getSimpleName();
     public static final float SCALE = 1.f / 20;
-    private List<ViewGroup> targetViewGroupList;
+    private List<ViewGroup> targets;
     private ArrayList<View> viewsArrayList = new ArrayList<>();
-    private List<ViewGroup> originalContainerArrayList;
+    private List<ViewGroup> sources;
 
     /**
      * Keys are indices of dragged items, values are indices of drop targets
@@ -34,7 +34,9 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
 
     @SuppressLint("ClickableViewAccessibility")
     public MultipleDraggableViewHelper(OnViewSelectionListener onViewSelectionListener, List<View> draggableViews, List<ViewGroup> startingViewGroups, List<ViewGroup> targetViewGroups) {
-        this.targetViewGroupList = Collections.unmodifiableList(targetViewGroups);
+        //Pass the original source
+        this.sources = Collections.unmodifiableList(startingViewGroups);
+        this.targets = Collections.unmodifiableList(targetViewGroups);
         this.viewSelection = onViewSelectionListener;
 
         for (ViewGroup viewGroup : targetViewGroups) {
@@ -43,7 +45,6 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
         for (View view : draggableViews) {
             addDraggableView(view);
         }
-        originalContainerArrayList = Collections.unmodifiableList(startingViewGroups);
     }
 
     private void addDraggableView(View view) {
@@ -57,7 +58,7 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
         View view = (View) event.getLocalState();
 
         boolean hasMatch = false;
-        for (ViewGroup viewGroup : targetViewGroupList) {
+        for (ViewGroup viewGroup : targets) {
             hasMatch = targetView.getId() == viewGroup.getId();
             if (hasMatch) {
                 break;
@@ -80,7 +81,7 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
                                 }
                             }
                             //Move item to new selected target
-                            int position = targetViewGroupList.indexOf(targetContainer);
+                            int position = targets.indexOf(targetContainer);
                             int index = selection.indexOfValue(position);
                             if (index > -1) {
                                 int item = selection.keyAt(index);
@@ -121,10 +122,10 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
     }
 
     private void moveViewToTarget(View view, ViewGroup to) {
-        int droppedPosition = targetViewGroupList.indexOf(to);
+        int droppedPosition = targets.indexOf(to);
         int item = viewsArrayList.indexOf(view);
         ViewGroup from = (ViewGroup) view.getParent();
-        if (targetViewGroupList.contains(from)) {
+        if (targets.contains(from)) {
             //Remove entry from selection
             // as we're moving out
             selection.delete(item);
@@ -135,7 +136,7 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
     }
 
     private void moveViewBackToOrigin(View view) {
-        ViewGroup originalTarget = originalContainerArrayList.get(viewsArrayList.indexOf(view));
+        ViewGroup originalTarget = sources.get(viewsArrayList.indexOf(view));
         int item = viewsArrayList.indexOf(view);
         selection.delete(item);
         ViewGroup owner = (ViewGroup) view.getParent();

@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
     private View imgSourceOne, imgSourceTwo, imgSourceThree, imgSourceFour;
     private ViewGroup rlSourceOne, rlSourceTwo, rlSourceThree, rlSourceFour;
     private ViewGroup rlDestination, rlDestination2, rlDestination3, rlDestination4;
-    private MultipleDraggableViewHelper multipleDraggableViewHelper;
     private ScrollView scrollView;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
                 rlDestination4
         );
         List<View> draggableViews = Arrays.<View>asList(imgSourceOne, imgSourceTwo, imgSourceThree, imgSourceFour);
-        multipleDraggableViewHelper = new MultipleDraggableViewHelper(this, draggableViews, sources, targets);
+        MultipleDraggableViewHelper multipleDraggableViewHelper = new MultipleDraggableViewHelper(this, draggableViews, sources, targets);
 
         AutoScrollDragHelper autoScrollDragHelper = new AutoScrollDragHelper(scrollView);
         autoScrollDragHelper.start();
