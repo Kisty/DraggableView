@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:fillViewport="true"
     tools:context="com.app.dragableview.MainActivity">
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:fillViewport="true"
-        android:id="@+id/scrollView">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:orientation="vertical">
 
             <FrameLayout
@@ -122,39 +123,39 @@
                     android:background="@android:color/holo_blue_dark" />
             </FrameLayout>
         </LinearLayout>
-    </ScrollView>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/rlDestination"
-            android:layout_width="100dp"
-            android:layout_height="100dp">
+            <FrameLayout
+                android:id="@+id/rlDestination"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
 
-            <ImageView
-                android:id="@+id/imgDestination"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:background="@android:color/holo_green_dark" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/imgDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/holo_green_dark" />
+            </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/rlDestination2"
-            android:layout_width="100dp"
-            android:layout_height="100dp">
+            <FrameLayout
+                android:id="@+id/rlDestination2"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
 
-            <ImageView
-                android:id="@+id/imgDestination2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:background="@android:color/holo_red_dark" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/imgDestination2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/holo_red_dark" />
+            </FrameLayout>
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

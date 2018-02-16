@@ -2,7 +2,6 @@ package com.app.dragable_views;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.AutoScrollHelper;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -19,8 +18,10 @@ import java.util.ArrayList;
 public class DraggableViewMain implements View.OnTouchListener, View.OnDragListener {
 
     public static final String TAG = DraggableViewMain.class.getSimpleName();
+    public static final float SCALE = 1.f / 20;
     private ViewGroup destiViewGroup;
     private ArrayList<View> viewsArrayList = new ArrayList<>();
+    private ArrayList<ViewGroup> originalContainerArrayList = new ArrayList<>();
     public OnViewSelectionListener viewSelection;
 
     private boolean shouldAutoscroll = false;
@@ -47,19 +48,19 @@ public class DraggableViewMain implements View.OnTouchListener, View.OnDragListe
                 scrollView.postDelayed(this, 10);
             }
         };
-        scrollView.setOnDragListener(new View.OnDragListener() {
+        View.OnDragListener autoScrollDragListener = new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 float x = event.getX();
                 float y = event.getY();
-                Log.d(TAG, "onDrag: " + x + ", " + y);
+//                Log.d(TAG, "onDrag: " + x + ", " + y);
                 int action = event.getAction();
                 if (action == DragEvent.ACTION_DRAG_LOCATION) {
                     int height = scrollView.getHeight();
-                    if (y > height * 7 / 8) {
+                    if (y > height * (1 - SCALE)) {
                         shouldAutoscroll = true;
                         direction = 1;
-                    } else if (y < height / 8) {
+                    } else if (y < height * SCALE) {
                         shouldAutoscroll = true;
                         direction = -1;
                     } else {
@@ -72,19 +73,25 @@ public class DraggableViewMain implements View.OnTouchListener, View.OnDragListe
                     } else {
                         scrollView.removeCallbacks(autoScrollTask);
                     }
+                    return true;
                 } else if (action == DragEvent.ACTION_DRAG_EXITED
                         || action == DragEvent.ACTION_DROP) {
                     scrollView.removeCallbacks(autoScrollTask);
+                    return false;
+                } else if (action == DragEvent.ACTION_DRAG_STARTED) {
+                    return true;
                 }
-                return true;
+                return false;
             }
-        });
+        };
+        scrollView.setOnDragListener(autoScrollDragListener);
 
         scrollView.post(autoScrollTask);
     }
 
     public void addView(View view) {
         viewsArrayList.add(view);
+        originalContainerArrayList.add(((ViewGroup) view.getParent()));
         for (int i = 0; i < viewsArrayList.size(); i++) {
             viewsArrayList.get(i).setOnTouchListener(this);
         }
@@ -95,39 +102,54 @@ public class DraggableViewMain implements View.OnTouchListener, View.OnDragListe
         int action = event.getAction();
         View view = (View) event.getLocalState();
 
-        switch (action) {
-            case DragEvent.ACTION_DROP:
-                ViewGroup owner = (ViewGroup) view.getParent();
-//                view.setVisibility(View.INVISIBLE);
-                owner.removeView(view);
-                ViewGroup container = (ViewGroup) layoutView;
-                container.addView(view);
-                view.setVisibility(View.VISIBLE);
-
-
-                for (int i = 0; i < viewsArrayList.size(); i++) {
-                    if (view.getId() == viewsArrayList.get(i).getId()) {
-                        viewSelection.viewSelectedPosition(i);
-                    }
-                }
-
-                if (container.getId() == destiViewGroup.getId()) {
-//                    view.setOnTouchListener(null);
-//                    owner.setOnDragListener(null);
+        if (layoutView.getId() == destiViewGroup.getId()) {
+            Log.d(TAG, "onDrag() called with: layoutView = [" + layoutView + "], event = [" + event + "]");
+            switch (action) {
+                case DragEvent.ACTION_DROP:
+                    Log.d(TAG, "dropped in target");
                     return true;
-                } else {
-                    return false;
-                }
-
-            case DragEvent.ACTION_DRAG_ENDED:
-                if (dropEventNotHandled(event)) {
+                case DragEvent.ACTION_DRAG_ENDED:
+                    Log.d(TAG, "onDrag: drag ended. result: " + event.getResult());
+//                    if (dropEventNotHandled(event)) {
+//                        view.setVisibility(View.VISIBLE);
+//                    }
+                    for (int i = 0; i < viewsArrayList.size(); i++) {
+                        if (view.getId() == viewsArrayList.get(i).getId()) {
+                            viewSelection.viewSelectedPosition(i);
+                        }
+                    }
+                    ViewGroup dropTarget;
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    if (dropEventNotHandled(event)) {
+                        dropTarget = originalContainerArrayList.get(viewsArrayList.indexOf(view));
+                        owner.removeView(view);
+                        dropTarget.addView(view);
+                    } else {
+                        dropTarget = (ViewGroup) layoutView;
+                        owner.removeView(view);
+                        dropTarget.addView(view);
+                    }
                     view.setVisibility(View.VISIBLE);
-                }
-                break;
-            default:
-                break;
+                    break;
+//                case DragEvent.ACTION_DRAG_LOCATION:
+//                    Log.d(TAG, "Drag event location ");
+//                    return true;
+                case DragEvent.ACTION_DRAG_STARTED:
+//                    entered = false;
+                    return true;
+//                case DragEvent.ACTION_DRAG_ENTERED:
+//                    entered = true;
+//                    return true;
+//                case DragEvent.ACTION_DRAG_EXITED:
+//                    entered = false;
+//                    return true;
+                default:
+                    break;
+            }
+        } else {
+            Log.d(TAG, "onDrag: ignoring drag event");
         }
-        return true;
+        return false;
     }
 
     private boolean dropEventNotHandled(DragEvent dragEvent) {

@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
     private ImageView imgSourceOne, imgSourceTwo, imgSourceThree;
     private ViewGroup rlDestination, rlDestination2;
     private DraggableViewMain draggableViewMain;
-//    private DraggableViewMain draggableViewMain2;
+    private DraggableViewMain draggableViewMain2;
     private ScrollView scrollView;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -32,10 +32,10 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
         draggableViewMain.addView(imgSourceTwo);
         draggableViewMain.addView(imgSourceThree);
 
-//        draggableViewMain2 = new DraggableViewMain(this, rlDestination2);
-//        draggableViewMain2.addView(imgSourceOne);
-//        draggableViewMain2.addView(imgSourceTwo);
-//        draggableViewMain2.addView(imgSourceThree);
+        draggableViewMain2 = new DraggableViewMain(this, rlDestination2, scrollView);
+        draggableViewMain2.addView(imgSourceOne);
+        draggableViewMain2.addView(imgSourceTwo);
+        draggableViewMain2.addView(imgSourceThree);
     }
 
     private void initView() {
