@@ -9,8 +9,12 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.app.dragable_views.AutoScrollDragHelper;
 import com.app.dragable_views.DraggableViewMain;
 import com.app.dragable_views.OnViewSelectionListener;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnViewSelectionListener {
 
@@ -27,15 +31,22 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
         setContentView(R.layout.activity_main);
 
         initView();
-        draggableViewMain = new DraggableViewMain(this, rlDestination, scrollView);
+        List<ViewGroup> targets = Arrays.asList(
+                rlDestination,
+                rlDestination2
+        );
+        draggableViewMain = new DraggableViewMain(this, targets);
         draggableViewMain.addView(imgSourceOne);
         draggableViewMain.addView(imgSourceTwo);
         draggableViewMain.addView(imgSourceThree);
 
-        draggableViewMain2 = new DraggableViewMain(this, rlDestination2, scrollView);
-        draggableViewMain2.addView(imgSourceOne);
-        draggableViewMain2.addView(imgSourceTwo);
-        draggableViewMain2.addView(imgSourceThree);
+//        draggableViewMain2 = new DraggableViewMain(this, rlDestination2, scrollView);
+//        draggableViewMain2.addView(imgSourceOne);
+//        draggableViewMain2.addView(imgSourceTwo);
+//        draggableViewMain2.addView(imgSourceThree);
+
+        AutoScrollDragHelper autoScrollDragHelper = new AutoScrollDragHelper(scrollView);
+        autoScrollDragHelper.start();
     }
 
     private void initView() {
