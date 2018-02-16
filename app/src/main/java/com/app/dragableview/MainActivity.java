@@ -10,7 +10,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.app.dragable_views.AutoScrollDragHelper;
-import com.app.dragable_views.DraggableViewMain;
+import com.app.dragable_views.MultipleDraggableViewHelper;
 import com.app.dragable_views.OnViewSelectionListener;
 
 import java.util.Arrays;
@@ -20,8 +20,7 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
 
     private ImageView imgSourceOne, imgSourceTwo, imgSourceThree;
     private ViewGroup rlDestination, rlDestination2;
-    private DraggableViewMain draggableViewMain;
-    private DraggableViewMain draggableViewMain2;
+    private MultipleDraggableViewHelper multipleDraggableViewHelper;
     private ScrollView scrollView;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -35,10 +34,10 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
                 rlDestination,
                 rlDestination2
         );
-        draggableViewMain = new DraggableViewMain(this, targets);
-        draggableViewMain.addView(imgSourceOne);
-        draggableViewMain.addView(imgSourceTwo);
-        draggableViewMain.addView(imgSourceThree);
+        multipleDraggableViewHelper = new MultipleDraggableViewHelper(this, targets);
+        multipleDraggableViewHelper.addView(imgSourceOne);
+        multipleDraggableViewHelper.addView(imgSourceTwo);
+        multipleDraggableViewHelper.addView(imgSourceThree);
 
         AutoScrollDragHelper autoScrollDragHelper = new AutoScrollDragHelper(scrollView);
         autoScrollDragHelper.start();

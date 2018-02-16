@@ -2,35 +2,37 @@ package com.app.dragable_views;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Pratik Surela on 30/6/17.
  */
 
-public class DraggableViewMain implements View.OnTouchListener, View.OnDragListener {
+public class MultipleDraggableViewHelper implements View.OnTouchListener, View.OnDragListener {
 
-    public static final String TAG = DraggableViewMain.class.getSimpleName();
+    public static final String TAG = MultipleDraggableViewHelper.class.getSimpleName();
     public static final float SCALE = 1.f / 20;
-    private List<ViewGroup> destiViewGroupList;
+    private List<ViewGroup> targetViewGroupList;
     private ArrayList<View> viewsArrayList = new ArrayList<>();
     private ArrayList<ViewGroup> originalContainerArrayList = new ArrayList<>();
+    private SparseIntArray selection = new SparseIntArray();
     public OnViewSelectionListener viewSelection;
     private View activeDropTarget;
 
     @SuppressLint("ClickableViewAccessibility")
-    public DraggableViewMain(OnViewSelectionListener onViewSelectionListener, List<ViewGroup> destiViewGroupList) {
-        this.destiViewGroupList = destiViewGroupList;
+    public MultipleDraggableViewHelper(OnViewSelectionListener onViewSelectionListener, List<ViewGroup> targetViewGroupList) {
+        this.targetViewGroupList = Collections.unmodifiableList(targetViewGroupList);
         this.viewSelection = onViewSelectionListener;
 
-        for (ViewGroup viewGroup : destiViewGroupList) {
+        for (ViewGroup viewGroup : targetViewGroupList) {
             viewGroup.setOnDragListener(this);
         }
     }
@@ -38,9 +40,7 @@ public class DraggableViewMain implements View.OnTouchListener, View.OnDragListe
     public void addView(View view) {
         viewsArrayList.add(view);
         originalContainerArrayList.add(((ViewGroup) view.getParent()));
-        for (int i = 0; i < viewsArrayList.size(); i++) {
-            viewsArrayList.get(i).setOnTouchListener(this);
-        }
+        view.setOnTouchListener(this);
     }
 
     @Override
@@ -49,50 +49,50 @@ public class DraggableViewMain implements View.OnTouchListener, View.OnDragListe
         View view = (View) event.getLocalState();
 
         boolean hasMatch = false;
-        for (ViewGroup viewGroup : destiViewGroupList) {
+        for (ViewGroup viewGroup : targetViewGroupList) {
             hasMatch = layoutView.getId() == viewGroup.getId();
             if (hasMatch) {
                 break;
             }
         }
         if (hasMatch) {
-            Log.d(TAG, "onDrag() called with: layoutView = [" + layoutView + "], event = [" + event + "]");
             switch (action) {
                 case DragEvent.ACTION_DROP:
-                    Log.d(TAG, "dropped in target " + layoutView.getId());
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    Log.d(TAG, "onDrag: drag ended. result: " + event.getResult());
-//                    if (dropEventNotHandled(event)) {
-//                        view.setVisibility(View.VISIBLE);
-//                    }
-                    ViewGroup dropTarget;
+                    ViewGroup dropTarget = (ViewGroup) layoutView;
                     ViewGroup owner = (ViewGroup) view.getParent();
                     if (dropEventNotHandled(event)) {
-                        dropTarget = originalContainerArrayList.get(viewsArrayList.indexOf(view));
+                        ViewGroup originalTarget = originalContainerArrayList.get(viewsArrayList.indexOf(view));
+                        int key = targetViewGroupList.indexOf(layoutView);
+                        if (selection.get(key, -1) > -1) {
+                            selection.delete(key);
+                        }
                         owner.removeView(view);
-                        dropTarget.addView(view);
-                        Log.d(TAG, "onDrag: drag not handled for " + layoutView.getId());
+                        originalTarget.addView(view);
                     } else {
                         if (activeDropTarget == layoutView) {
                             for (int i = 0; i < viewsArrayList.size(); i++) {
                                 if (view.getId() == viewsArrayList.get(i).getId()) {
                                     viewSelection.viewSelectedPosition(i);
+                                    int key = targetViewGroupList.indexOf(dropTarget);
+                                    int value = viewsArrayList.indexOf(view);
+                                    selection.put(key, value);
                                 }
                             }
-                            dropTarget = (ViewGroup) layoutView;
                             owner.removeView(view);
                             dropTarget.addView(view);
                         } else {
                             return false;
                         }
                     }
+                    Log.d(TAG, "selection: " + selection);
                     view.setVisibility(View.VISIBLE);
                     return true;
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    Log.d(TAG, "Drag event location ");
                     return true;
                 case DragEvent.ACTION_DRAG_STARTED:
+                    //Request to listen to events
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     activeDropTarget = layoutView;

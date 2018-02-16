@@ -33,10 +33,10 @@ public class AutoScrollDragHelper {
                 int action = event.getAction();
                 if (action == DragEvent.ACTION_DRAG_LOCATION) {
                     int height = AutoScrollDragHelper.this.scrollView.getHeight();
-                    if (y > height * (1 - DraggableViewMain.SCALE)) {
+                    if (y > height * (1 - MultipleDraggableViewHelper.SCALE)) {
                         shouldAutoScroll = true;
                         direction = 1;
-                    } else if (y < height * DraggableViewMain.SCALE) {
+                    } else if (y < height * MultipleDraggableViewHelper.SCALE) {
                         shouldAutoScroll = true;
                         direction = -1;
                     } else {
