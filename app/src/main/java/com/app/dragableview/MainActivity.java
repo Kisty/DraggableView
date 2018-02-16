@@ -40,11 +40,6 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
         draggableViewMain.addView(imgSourceTwo);
         draggableViewMain.addView(imgSourceThree);
 
-//        draggableViewMain2 = new DraggableViewMain(this, rlDestination2, scrollView);
-//        draggableViewMain2.addView(imgSourceOne);
-//        draggableViewMain2.addView(imgSourceTwo);
-//        draggableViewMain2.addView(imgSourceThree);
-
         AutoScrollDragHelper autoScrollDragHelper = new AutoScrollDragHelper(scrollView);
         autoScrollDragHelper.start();
     }
