@@ -22,35 +22,43 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
     public static final float SCALE = 1.f / 20;
     private List<ViewGroup> targetViewGroupList;
     private ArrayList<View> viewsArrayList = new ArrayList<>();
-    private ArrayList<ViewGroup> originalContainerArrayList = new ArrayList<>();
+    private List<ViewGroup> originalContainerArrayList;
+
+    /**
+     * Keys are indices of dragged items, values are indices of drop targets
+     */
     private SparseIntArray selection = new SparseIntArray();
+
     public OnViewSelectionListener viewSelection;
     private View activeDropTarget;
 
     @SuppressLint("ClickableViewAccessibility")
-    public MultipleDraggableViewHelper(OnViewSelectionListener onViewSelectionListener, List<ViewGroup> targetViewGroupList) {
-        this.targetViewGroupList = Collections.unmodifiableList(targetViewGroupList);
+    public MultipleDraggableViewHelper(OnViewSelectionListener onViewSelectionListener, List<View> draggableViews, List<ViewGroup> startingViewGroups, List<ViewGroup> targetViewGroups) {
+        this.targetViewGroupList = Collections.unmodifiableList(targetViewGroups);
         this.viewSelection = onViewSelectionListener;
 
-        for (ViewGroup viewGroup : targetViewGroupList) {
+        for (ViewGroup viewGroup : targetViewGroups) {
             viewGroup.setOnDragListener(this);
         }
+        for (View view : draggableViews) {
+            addDraggableView(view);
+        }
+        originalContainerArrayList = Collections.unmodifiableList(startingViewGroups);
     }
 
-    public void addView(View view) {
+    private void addDraggableView(View view) {
         viewsArrayList.add(view);
-        originalContainerArrayList.add(((ViewGroup) view.getParent()));
         view.setOnTouchListener(this);
     }
 
     @Override
-    public boolean onDrag(View layoutView, DragEvent event) {
+    public boolean onDrag(View targetView, DragEvent event) {
         int action = event.getAction();
         View view = (View) event.getLocalState();
 
         boolean hasMatch = false;
         for (ViewGroup viewGroup : targetViewGroupList) {
-            hasMatch = layoutView.getId() == viewGroup.getId();
+            hasMatch = targetView.getId() == viewGroup.getId();
             if (hasMatch) {
                 break;
             }
@@ -60,28 +68,29 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
                 case DragEvent.ACTION_DROP:
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    ViewGroup dropTarget = (ViewGroup) layoutView;
-                    ViewGroup owner = (ViewGroup) view.getParent();
+                    ViewGroup targetContainer = (ViewGroup) targetView;
                     if (dropEventNotHandled(event)) {
-                        ViewGroup originalTarget = originalContainerArrayList.get(viewsArrayList.indexOf(view));
-                        int key = targetViewGroupList.indexOf(layoutView);
-                        if (selection.get(key, -1) > -1) {
-                            selection.delete(key);
-                        }
-                        owner.removeView(view);
-                        originalTarget.addView(view);
+                        //Move view back to original position
+                        moveViewBackToOrigin(view);
                     } else {
-                        if (activeDropTarget == layoutView) {
+                        if (activeDropTarget == targetView) {
                             for (int i = 0; i < viewsArrayList.size(); i++) {
                                 if (view.getId() == viewsArrayList.get(i).getId()) {
                                     viewSelection.viewSelectedPosition(i);
-                                    int key = targetViewGroupList.indexOf(dropTarget);
-                                    int value = viewsArrayList.indexOf(view);
-                                    selection.put(key, value);
                                 }
                             }
-                            owner.removeView(view);
-                            dropTarget.addView(view);
+                            //Move item to new selected target
+                            int position = targetViewGroupList.indexOf(targetContainer);
+                            int index = selection.indexOfValue(position);
+                            if (index > -1) {
+                                int item = selection.keyAt(index);
+                                View oldSelectedView = viewsArrayList.get(item);
+                                if (oldSelectedView != view) {
+                                    //First move that to original view
+                                    moveViewBackToOrigin(oldSelectedView);
+                                }
+                            }
+                            moveViewToTarget(view, targetContainer);
                         } else {
                             return false;
                         }
@@ -95,10 +104,10 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
                     //Request to listen to events
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    activeDropTarget = layoutView;
+                    activeDropTarget = targetView;
                     return true;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    if (activeDropTarget == layoutView) {
+                    if (activeDropTarget == targetView) {
                         activeDropTarget = null;
                     }
                     return true;
@@ -109,6 +118,31 @@ public class MultipleDraggableViewHelper implements View.OnTouchListener, View.O
             Log.d(TAG, "onDrag: ignoring drag event");
         }
         return false;
+    }
+
+    private void moveViewToTarget(View view, ViewGroup to) {
+        int droppedPosition = targetViewGroupList.indexOf(to);
+        int item = viewsArrayList.indexOf(view);
+        ViewGroup from = (ViewGroup) view.getParent();
+        if (targetViewGroupList.contains(from)) {
+            //Remove entry from selection
+            // as we're moving out
+            selection.delete(item);
+        }
+        selection.put(item, droppedPosition);
+        from.removeView(view);
+        to.addView(view);
+    }
+
+    private void moveViewBackToOrigin(View view) {
+        ViewGroup originalTarget = originalContainerArrayList.get(viewsArrayList.indexOf(view));
+        int item = viewsArrayList.indexOf(view);
+        selection.delete(item);
+        ViewGroup owner = (ViewGroup) view.getParent();
+        owner.removeView(view);
+        if (originalTarget.getChildCount() == 0) {
+            originalTarget.addView(view);
+        }
     }
 
     private boolean dropEventNotHandled(DragEvent dragEvent) {

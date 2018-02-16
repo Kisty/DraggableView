@@ -3,6 +3,7 @@ package com.app.dragableview;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnViewSelectionListener {
 
     private ImageView imgSourceOne, imgSourceTwo, imgSourceThree;
+    private ViewGroup rlSourceOne, rlSourceTwo, rlSourceThree;
     private ViewGroup rlDestination, rlDestination2;
     private MultipleDraggableViewHelper multipleDraggableViewHelper;
     private ScrollView scrollView;
@@ -30,14 +32,13 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
         setContentView(R.layout.activity_main);
 
         initView();
+        List<ViewGroup> sources = Arrays.asList(rlSourceOne, rlSourceTwo, rlSourceThree);
         List<ViewGroup> targets = Arrays.asList(
                 rlDestination,
                 rlDestination2
         );
-        multipleDraggableViewHelper = new MultipleDraggableViewHelper(this, targets);
-        multipleDraggableViewHelper.addView(imgSourceOne);
-        multipleDraggableViewHelper.addView(imgSourceTwo);
-        multipleDraggableViewHelper.addView(imgSourceThree);
+        List<View> draggableViews = Arrays.<View>asList(imgSourceOne, imgSourceTwo, imgSourceThree);
+        multipleDraggableViewHelper = new MultipleDraggableViewHelper(this, draggableViews, sources, targets);
 
         AutoScrollDragHelper autoScrollDragHelper = new AutoScrollDragHelper(scrollView);
         autoScrollDragHelper.start();
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
         imgSourceOne = (ImageView) findViewById(R.id.imgSourceOne);
         imgSourceTwo = (ImageView) findViewById(R.id.imgSourceTwo);
         imgSourceThree = (ImageView) findViewById(R.id.imgSourceThree);
+        rlSourceOne = (ViewGroup) findViewById(R.id.rlSourceOne);
+        rlSourceTwo = (ViewGroup) findViewById(R.id.rlSourceTwo);
+        rlSourceThree = (ViewGroup) findViewById(R.id.rlSourceThree);
 
         scrollView = ((ScrollView) findViewById(R.id.scrollView));
 
@@ -56,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
 
     @Override
     public int viewSelectedPosition(int position) {
-
         if (position == 0) {
             //do after view one dragged
         } else if (position == 1) {
