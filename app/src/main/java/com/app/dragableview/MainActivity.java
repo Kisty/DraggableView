@@ -19,9 +19,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnViewSelectionListener {
 
-    private ImageView imgSourceOne, imgSourceTwo, imgSourceThree;
-    private ViewGroup rlSourceOne, rlSourceTwo, rlSourceThree;
-    private ViewGroup rlDestination, rlDestination2;
+    private View imgSourceOne, imgSourceTwo, imgSourceThree, imgSourceFour;
+    private ViewGroup rlSourceOne, rlSourceTwo, rlSourceThree, rlSourceFour;
+    private ViewGroup rlDestination, rlDestination2, rlDestination3, rlDestination4;
     private MultipleDraggableViewHelper multipleDraggableViewHelper;
     private ScrollView scrollView;
 
@@ -32,12 +32,14 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
         setContentView(R.layout.activity_main);
 
         initView();
-        List<ViewGroup> sources = Arrays.asList(rlSourceOne, rlSourceTwo, rlSourceThree);
+        List<ViewGroup> sources = Arrays.asList(rlSourceOne, rlSourceTwo, rlSourceThree, rlSourceFour);
         List<ViewGroup> targets = Arrays.asList(
                 rlDestination,
-                rlDestination2
+                rlDestination2,
+                rlDestination3,
+                rlDestination4
         );
-        List<View> draggableViews = Arrays.<View>asList(imgSourceOne, imgSourceTwo, imgSourceThree);
+        List<View> draggableViews = Arrays.<View>asList(imgSourceOne, imgSourceTwo, imgSourceThree, imgSourceFour);
         multipleDraggableViewHelper = new MultipleDraggableViewHelper(this, draggableViews, sources, targets);
 
         AutoScrollDragHelper autoScrollDragHelper = new AutoScrollDragHelper(scrollView);
@@ -45,17 +47,22 @@ public class MainActivity extends AppCompatActivity implements OnViewSelectionLi
     }
 
     private void initView() {
-        imgSourceOne = (ImageView) findViewById(R.id.imgSourceOne);
-        imgSourceTwo = (ImageView) findViewById(R.id.imgSourceTwo);
-        imgSourceThree = (ImageView) findViewById(R.id.imgSourceThree);
+        imgSourceOne = findViewById(R.id.imgSourceOne);
+        imgSourceTwo = findViewById(R.id.imgSourceTwo);
+        imgSourceThree = findViewById(R.id.imgSourceThree);
+        imgSourceFour = findViewById(R.id.imgSourceFour);
+
         rlSourceOne = (ViewGroup) findViewById(R.id.rlSourceOne);
         rlSourceTwo = (ViewGroup) findViewById(R.id.rlSourceTwo);
         rlSourceThree = (ViewGroup) findViewById(R.id.rlSourceThree);
+        rlSourceFour = (ViewGroup) findViewById(R.id.rlSourceFour);
 
         scrollView = ((ScrollView) findViewById(R.id.scrollView));
 
         rlDestination = (FrameLayout) findViewById(R.id.rlDestination);
         rlDestination2 = (FrameLayout) findViewById(R.id.rlDestination2);
+        rlDestination3 = (FrameLayout) findViewById(R.id.rlDestination3);
+        rlDestination4 = (FrameLayout) findViewById(R.id.rlDestination4);
     }
 
     @Override

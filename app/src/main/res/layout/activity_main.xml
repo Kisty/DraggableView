@@ -58,70 +58,72 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/rlSourceFour"
                 android:layout_width="100dp"
                 android:layout_height="100dp">
 
                 <ImageView
+                    android:id="@+id/imgSourceFour"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@android:color/holo_blue_dark" />
+                    android:background="@android:color/holo_red_light" />
             </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+            <!--<FrameLayout-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="100dp">-->
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@android:color/holo_blue_dark" />
-            </FrameLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:background="@android:color/holo_green_light" />-->
+            <!--</FrameLayout>-->
 
-            <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+            <!--<FrameLayout-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="100dp">-->
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@android:color/holo_blue_dark" />
-            </FrameLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:background="@android:color/holo_blue_dark" />-->
+            <!--</FrameLayout>-->
 
-            <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+            <!--<FrameLayout-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="100dp">-->
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@android:color/holo_blue_dark" />
-            </FrameLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:background="@android:color/holo_blue_dark" />-->
+            <!--</FrameLayout>-->
 
-            <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+            <!--<FrameLayout-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="100dp">-->
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@android:color/holo_blue_dark" />
-            </FrameLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:background="@android:color/holo_blue_dark" />-->
+            <!--</FrameLayout>-->
 
-            <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+            <!--<FrameLayout-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="100dp">-->
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@android:color/holo_blue_dark" />
-            </FrameLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:background="@android:color/holo_blue_dark" />-->
+            <!--</FrameLayout>-->
         </LinearLayout>
 
         <LinearLayout
@@ -140,7 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@android:color/holo_green_dark" />
+                    android:background="@android:color/darker_gray" />
             </FrameLayout>
 
             <FrameLayout
@@ -153,7 +155,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@android:color/holo_red_dark" />
+                    android:background="@android:color/darker_gray" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/rlDestination3"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+
+                <ImageView
+                    android:id="@+id/imgDestination3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/darker_gray" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/rlDestination4"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+
+                <ImageView
+                    android:id="@+id/imgDestination4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/darker_gray" />
             </FrameLayout>
         </LinearLayout>
 
